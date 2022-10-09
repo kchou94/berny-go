@@ -1,3 +1,3 @@
-module github.com/bernylinville/berny-go
+module berny-go
 
 go 1.19

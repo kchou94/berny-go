@@ -51,4 +51,25 @@ func main() {
 	// 时间戳转时间对象
 	timeObj2 := time.Unix(timestamp1, 0)
 	fmt.Println(timeObj2)
+
+	fmt.Println("-----------------------------")
+
+	// 时间操作
+	now4 := time.Now()
+	// 1m前
+	m, err := time.ParseDuration("-1m")
+	if err != nil {
+		fmt.Println(err)
+	}
+	m1 := now4.Add(m)
+	fmt.Println(m1)
+	// 1m后
+	mm, err := time.ParseDuration("1m")
+	if err != nil {
+		fmt.Println(err)
+	}
+	mm1 := now4.Add(mm)
+	fmt.Println(mm1)
+	// 差值
+	fmt.Println(mm1.Sub(m1))
 }

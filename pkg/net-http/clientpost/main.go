@@ -26,6 +26,5 @@ func requestPost() {
 
 func main() {
 	requestPost()
-	// 请求路由为： http://localhost:8005/req/get?name=root
-	// 返回数据为： {"Name2":"root"}
+	// "收到名字：rootPort"
 }

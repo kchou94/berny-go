@@ -12,6 +12,8 @@ type Data struct {
 }
 
 // 处理GET请求：http://localhost:8005/req/get?name=张三
+// http.ResponseWriter：用来返回给客户端的响应内容
+// http.Request：用来获取客户端的请求内容
 func getRequestHandler(w http.ResponseWriter, r *http.Request) {
 	// 获取请求参数
 	query1 := r.URL.Query()
@@ -24,15 +26,22 @@ func getRequestHandler(w http.ResponseWriter, r *http.Request) {
 	name2 := query1.Get("name")
 	fmt.Println("使用Get方法获取：", name2)
 
-	type data struct {
-		Name2 string
-	}
-	d := data{
-		Name2: name2,
+	// 返回响应内容，方式1
+	// w.WriteHeader(http.StatusOK)     // 设置响应状态码
+	// _, err := w.Write([]byte(name2)) // 返回string
+	// if err != nil {
+	// 	fmt.Println("返回响应失败：", err)
+	// }
+
+	// type data struct {
+	// 	Name2 string
+	// }
+	d := &Data{
+		Name: name2,
 	}
 
-	// d := name2
-	// w.Write([]byte(string(d))) // 返回string
+	// 返回响应内容，方式2
+	w.WriteHeader(http.StatusOK)
 	err := json.NewEncoder(w).Encode(d) // 返回json
 	if err != nil {
 		fmt.Println(err)
@@ -47,6 +56,7 @@ func postRequestHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("读取请求体数据失败：", err)
 		return
 	}
+
 	strData := string(bodyContent)
 	var d Data
 	err = json.Unmarshal([]byte(strData), &d)
@@ -54,6 +64,13 @@ func postRequestHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("json解析失败：", err)
 		return
 	}
+
+	// 返回响应内容
+	// err = json.NewEncoder(w).Encode(d.Name)
+	// if err != nil {
+	// 	fmt.Println("返回响应失败：", err)
+	// }
+
 	fmt.Printf("body content:[%s]\n", strData)
 	// 返回响应内容
 	err = json.NewEncoder(w).Encode(fmt.Sprintf("收到名字：%s", d.Name))

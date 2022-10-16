@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -33,13 +33,16 @@ func getRequestHandler(w http.ResponseWriter, r *http.Request) {
 
 	// d := name2
 	// w.Write([]byte(string(d))) // 返回string
-	json.NewEncoder(w).Encode(d) // 返回json
+	err := json.NewEncoder(w).Encode(d) // 返回json
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 // 处理POST请求：http://localhost:8005/req/post{"name":"张三"}
 func postRequestHandler(w http.ResponseWriter, r *http.Request) {
 	// 请求体数据
-	bodyContent, err := ioutil.ReadAll(r.Body)
+	bodyContent, err := io.ReadAll(r.Body)
 	if err != nil {
 		fmt.Println("读取请求体数据失败：", err)
 		return
@@ -53,11 +56,18 @@ func postRequestHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("body content:[%s]\n", strData)
 	// 返回响应内容
-	json.NewEncoder(w).Encode(fmt.Sprintf("收到名字：%s", d.Name))
+	err = json.NewEncoder(w).Encode(fmt.Sprintf("收到名字：%s", d.Name))
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func main() {
 	http.HandleFunc("/req/post", postRequestHandler) // 处理POST请求
 	http.HandleFunc("/req/get", getRequestHandler)   // 处理GET请求
-	http.ListenAndServe(":8005", nil)                // 监听端口
+	err := http.ListenAndServe(":8005", nil)         // 监听端口
+	if err != nil {
+		fmt.Println("启动服务失败：", err)
+		return
+	}
 }

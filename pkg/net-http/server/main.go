@@ -49,6 +49,7 @@ func getRequestHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // 处理POST请求：http://localhost:8005/req/post{"name":"张三"}
+// curl -X POST http://localhost:8005/req/post -d '{"name":"张三"}'
 func postRequestHandler(w http.ResponseWriter, r *http.Request) {
 	// 请求体数据
 	bodyContent, err := io.ReadAll(r.Body)
